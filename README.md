@@ -2,7 +2,7 @@
 
 Classify English movie reviews as positive or negative using a pretrained DistilBERT model, with a simple web interface built in Gradio.
 
-![demo](/Users/anthonylin/Desktop/Project/hf-sentiment-inference/images/demo.png)
+  ![demo](images/demo.png)
 
 ## Features
 
