@@ -2,7 +2,12 @@
 
 Classify English movie reviews as positive or negative using a pretrained DistilBERT model, with a simple web interface built in Gradio.
 
-![demo](images/demo.png)
+Positive
+![demo_P](images/demo_P.png)
+
+Negative
+![demo_N](images/demo_N.png)
+
 
 ## Features
 
