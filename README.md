@@ -2,7 +2,7 @@
 
 Classify English movie reviews as positive or negative using a pretrained DistilBERT model, with a simple web interface built in Gradio.
 
-  ![demo](images/demo.png)
+![demo](images/demo.png)
 
 ## Features
 
@@ -34,6 +34,7 @@ Model: [`lvwerra/distilbert-imdb`](https://huggingface.co/lvwerra/distilbert-imd
 ```bash
 pip install -r requirements.txt
 
+# Launch the web interface
 python app.py
 ```
 
@@ -45,19 +46,22 @@ To reproduce the evaluation, open `evaluation.ipynb` and run all cells.
 
 500 reviews randomly sampled from the IMDB test set (`seed=42`):
 
-| Model | Preprocessing | Accuracy |
-|---|---|---|
-| distilbert-base-uncased-finetuned-sst-2-english | truncate to 512 tokens | 89.0% |
-| distilbert-base-uncased-finetuned-sst-2-english | head + tail truncation | 88.4% |
-| **lvwerra/distilbert-imdb** | **head + tail truncation** | **92.0%** |
+| Model | Preprocessing | Accuracy | F1 |
+|---|---|---|---|
+| SST-2 (`distilbert-base-uncased-finetuned-sst-2-english`) | truncate | 0.892 | 0.889 |
+| SST-2 (`distilbert-base-uncased-finetuned-sst-2-english`) | head + tail | 0.884 | 0.881 |
+| **IMDB (`lvwerra/distilbert-imdb`)** | **truncate** | **0.926** | **0.925** |
+| IMDB (`lvwerra/distilbert-imdb`) | head + tail | 0.920 | 0.919 |
 
-The biggest gain came from switching models. The first model was fine-tuned on SST-2, which consists of short sentences, while IMDB reviews are long and often mixed in tone. A model fine-tuned on IMDB itself handles them better.
+The final app uses the IMDB model with simple truncation.
+
+The biggest gain came from switching models (89.2% → 92.6%). The SST-2 model was fine-tuned on short sentences, while IMDB reviews are long and often mixed in tone. A model fine-tuned on IMDB itself handles them better.
 
 ## Handling Long Reviews
 
-DistilBERT accepts at most 512 tokens, and many IMDB reviews are longer. Simple truncation keeps only the beginning, but reviewers often state their verdict at the end. So for long reviews, I keep the first 128 tokens and the last 382 tokens.
+DistilBERT accepts at most 512 tokens, and many IMDB reviews are longer. Simple truncation keeps only the beginning, so I hypothesized that reviewers' verdicts at the end were being cut off. To test this, I tried keeping the first 128 and the last 382 tokens of long reviews.
 
-With the SST-2 model this made no real difference (89.0% → 88.4%, within noise for 500 samples): it fixed some positive reviews but broke negative reviews whose endings softened in tone. This suggested the model, not truncation, was the main bottleneck, which led to switching models.
+The hypothesis did not hold. Head + tail truncation slightly lowered accuracy for both models (SST-2: 0.892 → 0.884, IMDB: 0.926 → 0.920). Looking at the errors, it fixed some positive reviews with a verdict at the end, but broke negative reviews whose endings softened in tone. The differences are also small enough to be noise at 500 samples. Since head + tail added complexity without improving results, I kept simple truncation.
 
 ## Error Analysis
 
