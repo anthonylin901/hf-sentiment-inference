@@ -69,10 +69,8 @@ Reviewing the misclassified examples, the main failure patterns were:
 
 1. **Mixed reviews**: heavy criticism followed by a positive overall verdict ("dumb movie, but I loved it"), or the reverse
 2. **Sarcasm**: positive words used to express a negative opinion
-3. **Ambiguous labels**: some reviews labeled negative read as neutral or mildly positive
 
 ## Possible Improvements
 
 - Fine-tune DistilBERT on the IMDB training set myself
 - Evaluate on a larger sample for more stable results
-- Deploy the app to Hugging Face Spaces
